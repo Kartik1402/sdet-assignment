@@ -48,6 +48,13 @@ public class BaseTest {
         String url = ConfigManager.getProperty("url");
         logger.info("Navigating to: {}", url);
         page.navigate(url);
+        
+        // Wait for base SPA selector to load to ensure page is initialized
+        try {
+            page.waitForSelector("#email", new Page.WaitForSelectorOptions().setTimeout(10000));
+        } catch (Exception e) {
+            logger.warn("Dynamic SPA email lookup field (#email) did not load in time.");
+        }
     }
 
     @AfterEach

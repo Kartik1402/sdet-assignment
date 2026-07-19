@@ -20,11 +20,11 @@ public class SignupEmailPage extends BasePage {
 
     public SignupEmailPage(Page page) {
         super(page);
-        // Prioritize getByPlaceholder and getByRole
-        this.emailInput = page.getByPlaceholder("Email Address");
-        this.continueBtn = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Get Started").setExact(false));
+        // Map actual CSS selectors for the real AlmaShines account portal page
+        this.emailInput = page.locator("#email");
+        this.continueBtn = page.locator("#emailBtn, .submit-button-port");
         // Fallback for visual error banners
-        this.duplicateEmailErrorMsg = page.locator(".error-message, .alert-danger, [id*='error']");
+        this.duplicateEmailErrorMsg = page.locator(".error-message, .alert-danger, [id*='error'], #toast-contain .mdl-snackbar__text");
     }
 
     /**

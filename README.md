@@ -159,5 +159,4 @@ mvn test -Dtest=SignupHappyPathTest
 
 ---
 
-**Author:** QA Engineering Candidate  
-**Contact:** sdet.candidate@yopmail.com
+**Author:** Kartik

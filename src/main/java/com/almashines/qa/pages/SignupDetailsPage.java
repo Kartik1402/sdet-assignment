@@ -16,7 +16,6 @@ public class SignupDetailsPage extends BasePage {
     // Private Locators
     private final Locator firstNameInput;
     private final Locator lastNameInput;
-    private final Locator phoneInput;
     private final Locator passwordInput;
     private final Locator confirmPasswordInput;
     private final Locator proceedBtn;
@@ -24,20 +23,18 @@ public class SignupDetailsPage extends BasePage {
 
     public SignupDetailsPage(Page page) {
         super(page);
-        this.firstNameInput = page.getByPlaceholder("First Name");
-        this.lastNameInput = page.getByPlaceholder("Last Name");
-        this.phoneInput = page.getByPlaceholder("Mobile Number");
-        this.passwordInput = page.getByPlaceholder("Password").first();
-        this.confirmPasswordInput = page.getByPlaceholder("Confirm Password");
-        this.proceedBtn = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Proceed").setExact(false));
-        this.validationErrorAlert = page.locator(".invalid-feedback, .error-msg, [id*='validation']");
+        this.firstNameInput = page.locator("#fname");
+        this.lastNameInput = page.locator("#lname");
+        this.passwordInput = page.locator("#password");
+        this.confirmPasswordInput = page.locator("#re-password");
+        this.proceedBtn = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("SIGN UP").setExact(false));
+        this.validationErrorAlert = page.locator(".invalid-feedback, .error-msg, [id*='validation'], #toast-contain .mdl-snackbar__text");
     }
 
     public SignupDetailsPage fillPersonalDetails(String firstName, String lastName, String phone, String password) {
-        logger.info("Filling personal details: {} {}, phone: {}", firstName, lastName, phone);
+        logger.info("Filling personal details: {} {}", firstName, lastName);
         firstNameInput.fill(firstName);
         lastNameInput.fill(lastName);
-        phoneInput.fill(phone);
         passwordInput.fill(password);
         confirmPasswordInput.fill(password);
         return this;
@@ -50,10 +47,10 @@ public class SignupDetailsPage extends BasePage {
         return this;
     }
 
-    public RoleSelectionPage clickProceed() {
-        logger.info("Clicking Proceed to navigate to affiliation details.");
+    public OTPVerificationPage clickProceed() {
+        logger.info("Clicking Proceed to navigate to OTP verification.");
         proceedBtn.click();
-        return new RoleSelectionPage(page);
+        return new OTPVerificationPage(page);
     }
 
     public boolean isValidationErrorAlertVisible() {

@@ -40,11 +40,17 @@ public class SignupBoundaryTest extends BaseTest {
         if (shouldPass) {
             // Verify navigation successfully proceeds past step 2 (i.e. validation error is NOT displayed)
             boolean errorVisible = detailsPage.isValidationErrorAlertVisible();
+            if (errorVisible) {
+                logger.error("Validation error displayed unexpectedly: '{}'", detailsPage.getValidationErrorText());
+            }
             logger.info("Validation errors display status: {}", errorVisible);
             assertTrue(!errorVisible, assertionMessage);
         } else {
             // Verify that navigation is blocked or error is displayed
             boolean errorVisible = detailsPage.isValidationErrorAlertVisible();
+            if (errorVisible) {
+                logger.info("Validation error text: '{}'", detailsPage.getValidationErrorText());
+            }
             logger.info("Validation errors display status: {}", errorVisible);
             assertTrue(errorVisible, assertionMessage);
         }
@@ -63,6 +69,11 @@ public class SignupBoundaryTest extends BaseTest {
         SignupDetailsPage detailsPage = emailPage.enterEmail(email7).clickContinue();
         detailsPage.fillPersonalDetails("Mentor", "SDET", "9876543210", "Pw123!4");
         detailsPage.clickProceed();
+        if (!detailsPage.isValidationErrorAlertVisible()) {
+            logger.error("Expected validation error for password length 7, but none was visible.");
+        } else {
+            logger.info("Password 7 validation warning: '{}'", detailsPage.getValidationErrorText());
+        }
         assertTrue(detailsPage.isValidationErrorAlertVisible(), "Password of length 7 was incorrectly accepted");
 
         // Test 8 characters password (should pass verification check)
@@ -70,6 +81,9 @@ public class SignupBoundaryTest extends BaseTest {
         emailPage.enterEmail(email8).clickContinue();
         detailsPage.fillPersonalDetails("Mentor", "SDET", "9876543210", "Pw123!45");
         detailsPage.clickProceed();
+        if (detailsPage.isValidationErrorAlertVisible()) {
+            logger.error("Password of length 8 was rejected with error: '{}'", detailsPage.getValidationErrorText());
+        }
         // Should successfully transition and NOT display validation errors
         assertTrue(!detailsPage.isValidationErrorAlertVisible(), "Password of length 8 was incorrectly rejected");
     }
@@ -89,6 +103,9 @@ public class SignupBoundaryTest extends BaseTest {
         // Verify lookup accepts and navigates to Details step
         String currentUrl = detailsPage.getPageUrl();
         logger.info("Current URL after submitting sanitized email: {}", currentUrl);
+        if (emailPage.isDuplicateEmailErrorVisible()) {
+            logger.error("Duplicate email error displayed: '{}'", emailPage.getDuplicateEmailErrorText());
+        }
         assertTrue(!emailPage.isDuplicateEmailErrorVisible(), "Lookup rejected sanitized email string");
     }
 }

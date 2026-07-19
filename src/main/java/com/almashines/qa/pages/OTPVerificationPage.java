@@ -23,11 +23,21 @@ public class OTPVerificationPage extends BasePage {
 
     public OTPVerificationPage(Page page) {
         super(page);
-        this.otpInput = page.getByPlaceholder("Enter OTP");
-        this.verifyBtn = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Verify").setExact(false));
+        this.otpInput = page.locator("#otp, #otp_input, [name*='otp'], [placeholder*='OTP']");
+        this.verifyBtn = page.locator("button:has-text('VERIFY'), button:has-text('Verify')");
         this.resendOtpLink = page.getByText("Resend OTP", new Page.GetByTextOptions().setExact(false));
         this.timerDisplay = page.locator(".otp-timer, #timer");
         this.invalidOtpError = page.locator(".error, .alert, [id*='otp-error']");
+    }
+
+    public boolean isOtpInputVisible() {
+        // Wait up to 5 seconds for OTP field to be visible
+        try {
+            otpInput.first().waitFor(new Locator.WaitForOptions().setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE).setTimeout(5000));
+            return otpInput.first().isVisible();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public OTPVerificationPage enterOTP(String otp) {
